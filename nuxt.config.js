@@ -192,7 +192,7 @@ export default {
   },
 
   server: {
-    port: 3010, // default: 3000
+    port: 6000, // default: 3000
 
     host: '0.0.0.0', // '0.0.0.0'
   },
