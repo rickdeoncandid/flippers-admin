@@ -47,7 +47,7 @@
             />
             <img
               v-if="!previewImage"
-              :src="'https://flippers.club/imgs' + image"
+              :src="'https://flippers.club/img' + image"
               class="uploading-image"
             />
             <v-btn
@@ -123,13 +123,7 @@
               </v-col>
             </v-row>
           </v-card-text>
-          <v-card-text>
-            <v-text-field
-              v-model="yt_link"
-              label="Youtube video url"
-              outlined
-            ></v-text-field>
-          </v-card-text>
+
           <v-card-text>
             <h3 class="mb-3">Monetization</h3>
             <v-select
@@ -144,55 +138,42 @@
     </v-row>
 
     <v-card outlined class="pa-3 mb-3">
-      <v-card-title>Previously Uploaded Screenshot</v-card-title>
+      <v-card-title>Uploaded Screenshot</v-card-title>
       <v-row align="end">
         <v-col v-for="image in saved_screenshot" :key="image" cols="4" sm="2">
-          <img :src="'https://flippers.club/imgs' + image" class="uploading-image" />
+          <a :href="'https://flippers.club/img' + image" target="blank"
+            ><img
+              :src="'https://flippers.club/img' + image"
+              class="uploading-image"
+          /></a>
         </v-col>
       </v-row>
       <div class="subtitle">
         ** New screenshot uploads will replace old ones.
       </div>
-    </v-card>
 
-    <v-card outlined>
-      <v-card-title>Upload Screenshot</v-card-title>
-      <v-row align="end">
-        <v-col
-          cols="2"
-          v-for="(screenshot, index) in screenshots"
-          :key="index"
-          class="text-center"
-        >
-          <img :src="screenshot.previewImage" class="uploading-image" />
-
-          <v-btn
-            v-if="!screenshot.previewImage"
-            @click="$refs.imageUpload[index].click()"
-            color="secondary"
-            fab
-            dark
-          >
-            <v-icon>mdi-upload</v-icon>
-          </v-btn>
-          <input
-            v-show="false"
-            ref="imageUpload"
-            type="file"
-            accept="image/jpeg"
-            @change="uploadSS($event, index)"
-          />
-          <v-btn
-            v-if="screenshot.previewImage"
-            color="error"
-            fab
-            dark
-            @click="screenshots.splice(index, 1)"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
+      <v-file-input
+        class="mt-3"
+        v-model="currFiles"
+        placeholder="Upload your screenshots"
+        label="File input"
+        multiple
+        accept="image/*"
+        outlined
+        @change="onFilePicked"
+        prepend-icon="mdi-paperclip"
+      >
+        <template v-slot:selection="{ text }">
+          <v-chip small label color="primary">
+            {{ text }}
+          </v-chip>
+        </template>
+      </v-file-input>
+      <v-text-field
+        v-model="yt_link"
+        label="Youtube video url"
+        outlined
+      ></v-text-field>
     </v-card>
 
     <v-row>
@@ -343,6 +324,8 @@ export default {
       ],
       monetization: '',
       drafttimer: false,
+      currFiles: [],
+      files: [],
     }
   },
   methods: {
@@ -393,6 +376,9 @@ export default {
       const data = await service.move_to_draft_listing(this.$axios, tosend)
       this.$router.push('/listings')
     },
+    async onFilePicked() {
+      this.files = this.currFiles
+    },
     async final() {
       let formData = new FormData()
       formData.append('listing_id', this.$route.params.id)
@@ -414,13 +400,34 @@ export default {
       formData.append('yt_link', this.yt_link)
       formData.append('monetization', this.monetization)
 
-      Array.from(this.screenshots).forEach((f) => {
-        formData.append('image[]', f.image)
+      Array.from(this.files).forEach((f) => {
+        formData.append('image[]', f)
       })
       const data = await service.update_publish_listing(this.$axios, formData)
       this.$router.push('/listings')
     },
+    async auto_update_listing(id) {
+      let formData = new FormData()
+      formData.append('listing_id', this.$route.params.id)
+      formData.append('featured_image', this.image)
+      formData.append('name', this.name)
+      formData.append('content', this.content)
+      formData.append('domain_authority', this.domain_authority)
+      formData.append('articles', this.articles)
+      formData.append('stats', JSON.stringify(this.stats))
+      formData.append('three_months', JSON.stringify(this.three_months))
+      formData.append('six_months', JSON.stringify(this.six_months))
+      formData.append('twelve_months', JSON.stringify(this.twelve_months))
 
+      formData.append('url', this.url)
+      formData.append('site_years', this.site_years)
+      formData.append('site_month', this.site_month)
+      formData.append('industry', this.industry)
+      formData.append('note', this.note)
+      formData.append('yt_link', this.yt_link)
+      formData.append('monetization', this.monetization)
+      const data = await service.update_listing(this.$axios, formData)
+    },
     async update_listing(id) {
       let formData = new FormData()
       formData.append('listing_id', this.$route.params.id)
@@ -442,8 +449,8 @@ export default {
       formData.append('yt_link', this.yt_link)
       formData.append('monetization', this.monetization)
 
-      Array.from(this.screenshots).forEach((f) => {
-        formData.append('image[]', f.image)
+      Array.from(this.files).forEach((f) => {
+        formData.append('image[]', f)
       })
       const data = await service.update_listing(this.$axios, formData)
     },
@@ -455,7 +462,7 @@ export default {
         months.push(item)
       })
 
-      return months
+      return months.reverse()
     },
     three_months() {
       return this.find_average(3)
@@ -479,7 +486,7 @@ export default {
           this.image
         ) {
           if (this.drafttimer) {
-            this.update_listing()
+            this.auto_update_listing()
           }
         }
       }, 10000)
@@ -487,7 +494,9 @@ export default {
       const data = await service.get_listing(this.$axios, this.$route.params.id)
 
       ;(this.yt_link = data.yt_link),
-        (this.image = data.featured_img),
+        (this.image = data.featured_img
+          ? data.featured_img
+          : '/public/no-image.jpg'),
         (this.isPublished = data.isPublished),
         (this.name = data.name),
         (this.url = data.url),
@@ -523,3 +532,4 @@ export default {
   display: none;
 }
 </style>
+

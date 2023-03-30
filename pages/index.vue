@@ -75,7 +75,9 @@
                       <v-icon color="error">mdi-delete</v-icon>
                     </v-btn>
                     <v-list-item-action>
-                      <v-btn text :to="'https://flippers.club/buy/' + item._id"
+                      <v-btn
+                        text
+                        :href="`https://flippers.club/buy/${item._id}`"
                         ><v-icon> small mdi-open-in-new </v-icon>
                       </v-btn>
                     </v-list-item-action>

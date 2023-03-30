@@ -20,7 +20,7 @@
             <v-col cols="12" sm="3">
               <img
                 v-if="listing.featured_img"
-                :src="'https://flippers.club/imgs' + listing.featured_img"
+                :src="'https://flippers.club/img' + listing.featured_img"
                 class="elevation-4 featured_img"
               />
             </v-col>
@@ -66,7 +66,7 @@
             <v-col cols="12" sm="3">
               <img
                 v-if="listing.featured_img"
-                :src="'https://flippers.club/' + listing.featured_img"
+                :src="'https://flippers.club/img' + listing.featured_img"
                 class="elevation-4"
               />
             </v-col>

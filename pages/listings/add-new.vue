@@ -112,13 +112,7 @@
               </v-col>
             </v-row>
           </v-card-text>
-          <v-card-text>
-            <v-text-field
-              v-model="yt_link"
-              label="Youtube video url"
-              outlined
-            ></v-text-field>
-          </v-card-text>
+
           <v-card-text>
             <h3 class="mb-3">Monetization</h3>
             <v-select
@@ -131,43 +125,44 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-card outlined>
-      <v-card-title>Upload Screenshot</v-card-title>
+
+    <v-card outlined class="pa-3 mb-3">
+      <v-card-title>Uploaded Screenshot</v-card-title>
       <v-row align="end">
-        <v-col
-          cols="2"
-          v-for="(screenshot, index) in screenshots"
-          :key="index"
-          class="text-center"
-        >
-          <img :src="screenshot.previewImage" class="uploading-image" />
-          <v-btn
-            v-if="!screenshot.previewImage"
-            @click="$refs.imageUpload[index].click()"
-            color="secondary"
-            fab
-            dark
-          >
-            <v-icon>mdi-upload</v-icon>
-          </v-btn>
-          <input
-            v-show="false"
-            ref="imageUpload"
-            type="file"
-            accept="image/jpeg"
-            @change="uploadSS($event, index)"
-          />
-          <v-btn
-            v-if="screenshot.previewImage"
-            color="error"
-            fab
-            dark
-            @click="screenshots.splice(index, 1)"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
+        <v-col v-for="image in saved_screenshot" :key="image" cols="4" sm="2">
+          <a :href="'http://localhost:8000' + image" target="blank"
+            ><img
+              :src="'http://localhost:8000' + image"
+              class="uploading-image"
+          /></a>
         </v-col>
       </v-row>
+      <div class="subtitle">
+        ** New screenshot uploads will replace old ones.
+      </div>
+
+      <v-file-input
+        class="mt-3"
+        v-model="currFiles"
+        placeholder="Upload your screenshots"
+        label="File input"
+        multiple
+        accept="image/*"
+        outlined
+        @change="onFilePicked"
+        prepend-icon="mdi-paperclip"
+      >
+        <template v-slot:selection="{ text }">
+          <v-chip small label color="primary">
+            {{ text }}
+          </v-chip>
+        </template>
+      </v-file-input>
+      <v-text-field
+        v-model="yt_link"
+        label="Youtube video url"
+        outlined
+      ></v-text-field>
     </v-card>
 
     <v-row>
@@ -305,6 +300,8 @@ export default {
       ],
       monetization: '',
       drafttimer: true,
+      currFiles: [],
+      files: [],
     }
   },
   methods: {
@@ -350,6 +347,9 @@ export default {
         }
       }
     },
+    async onFilePicked() {
+      this.files = this.currFiles
+    },
     async draft() {
       let formData = new FormData()
       formData.append('featured_image', this.image)
@@ -369,8 +369,8 @@ export default {
       formData.append('note', this.note)
       formData.append('yt_link', this.yt_link)
       formData.append('monetization', this.monetization)
-      Array.from(this.screenshots).forEach((f) => {
-        formData.append('image[]', f.image)
+      Array.from(this.files).forEach((f) => {
+        formData.append('image[]', f)
       })
       const data = await service.draft_listing(this.$axios, formData)
       this.drafttimer = false
@@ -400,8 +400,8 @@ export default {
       //   this.screenshots.map((o) => o.image)
       // )
 
-      Array.from(this.screenshots).forEach((f) => {
-        formData.append('image[]', f.image)
+      Array.from(this.files).forEach((f) => {
+        formData.append('image[]', f)
       })
       const data = await service.add_listing(this.$axios, formData)
     },
@@ -441,7 +441,7 @@ export default {
       )
 
       this.stats = res
-	final.reverse()
+      final.reverse()
       return final
     },
     three_months() {

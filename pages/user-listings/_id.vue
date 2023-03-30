@@ -1,7 +1,10 @@
 <template>
   <v-container class="admin-list">
     <v-card class="pa-4" outlined>
-      <h3>Submitted By: {{ user.name }} ( {{ user.email }} )</h3>
+      <h3>
+        Submitted By: {{ user.first_name + ' ' + user.last_name }} (
+        {{ user.email }} )
+      </h3>
       <br />
       <p>
         Skype: {{ user.social.skype }}<br />
@@ -53,7 +56,7 @@
             />
             <img
               v-if="!previewImage"
-              :src="'https://flippers.club/imgs' + image"
+              :src="'https://flippers.club/img' + image"
               class="uploading-image"
             />
             <v-btn
@@ -153,9 +156,9 @@
       <v-card-title>Uploaded Screenshot</v-card-title>
       <v-row align="end">
         <v-col v-for="image in saved_screenshot" :key="image" cols="4" sm="2">
-          <a :href="'https://flippers.club/imgs' + image" target="blank"
+          <a :href="'https://flippers.club/img' + image" target="blank"
             ><img
-              :src="'https://flippers.club/imgs' + image"
+              :src="'https://flippers.club/img' + image"
               class="uploading-image"
           /></a>
         </v-col>
@@ -163,9 +166,27 @@
       <div class="subtitle">
         ** New screenshot uploads will replace old ones.
       </div>
+
+      <v-file-input
+        class="mt-3"
+        v-model="currFiles"
+        placeholder="Upload your screenshots"
+        label="File input"
+        multiple
+        accept="image/*"
+        outlined
+        @change="onFilePicked"
+        prepend-icon="mdi-paperclip"
+      >
+        <template v-slot:selection="{ text }">
+          <v-chip small label color="primary">
+            {{ text }}
+          </v-chip>
+        </template>
+      </v-file-input>
     </v-card>
 
-    <v-card outlined>
+    <!-- <v-card outlined>
       <v-card-title>Upload Screenshot</v-card-title>
       <v-row align="end">
         <v-col
@@ -203,6 +224,17 @@
           </v-btn>
         </v-col>
       </v-row>
+    </v-card> -->
+
+    <v-card outlined class="mt-3">
+      <v-card-text>
+        <v-text-field
+          v-model="yt_link"
+          label="Youtube video url"
+          outlined
+          :disabled="isPublished"
+        ></v-text-field>
+      </v-card-text>
     </v-card>
 
     <v-row>
@@ -305,13 +337,13 @@
         color="warning"
         class="mr-3"
         large
-        @click="update_user_listing(this.$route.params.id, 2)"
+        @click="update_status_user_listing($route.params.id, 2)"
         ><v-icon>mdi-close</v-icon> Disapprove</v-btn
       >
       <v-btn
         color="success"
         large
-        @click="update_user_listing(this.$route.params.id, 1)"
+        @click="update_status_user_listing($route.params.id, 1)"
         ><v-icon>mdi-check</v-icon>Approve</v-btn
       >
     </div>
@@ -359,6 +391,8 @@ export default {
         'Other',
       ],
       monetization: '',
+      currFiles: [],
+      files: [],
     }
   },
   methods: {
@@ -404,6 +438,9 @@ export default {
         }
       }
     },
+    async onFilePicked() {
+      this.files = this.currFiles
+    },
     async final() {
       let formData = new FormData()
       formData.append('listing_id', this.$route.params.id)
@@ -425,8 +462,8 @@ export default {
       formData.append('yt_link', this.yt_link)
       formData.append('monetization', this.monetization)
 
-      Array.from(this.screenshots).forEach((f) => {
-        formData.append('image[]', f.image)
+      Array.from(this.files).forEach((f) => {
+        formData.append('image[]', f)
       })
       const data = await service.update_publish_listing(this.$axios, formData)
       this.$router.push('/listings')
@@ -452,14 +489,15 @@ export default {
       formData.append('yt_link', this.yt_link)
       formData.append('monetization', this.monetization)
 
-      Array.from(this.screenshots).forEach((f) => {
-        formData.append('image[]', f.image)
+      Array.from(this.files).forEach((f) => {
+        formData.append('image[]', f)
       })
       const data = await service.update_user_listing(this.$axios, formData)
     },
     async update_status_user_listing(listing, type) {
       try {
-        let tosend = { id: listing._id, status: type }
+        console.log(listing)
+        let tosend = { id: listing, status: type }
         const data = await service.update_status_user_listing(
           this.$axios,
           tosend

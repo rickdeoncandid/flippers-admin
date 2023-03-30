@@ -3,7 +3,7 @@
     <v-navigation-drawer v-if="this.$auth.loggedIn" drawer app>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="title">Flippers.club</v-list-item-title>
+          <v-list-item-title class="title">Flippers.xyz</v-list-item-title>
           <v-list-item-subtitle>Admin panel</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>

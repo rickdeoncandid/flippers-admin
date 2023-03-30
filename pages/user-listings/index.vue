@@ -29,7 +29,12 @@
         <v-col cols="12" sm="3">
           <img
             v-if="listing.featured_img"
-            :src="'https://flippers.club/imgs' + listing.featured_img"
+            :src="'https://flippers.club/img' + listing.featured_img"
+            class="elevation-4 featured_img"
+          />
+          <img
+            v-else
+            src="https://flippers.club/img/public/no-image.jpg"
             class="elevation-4 featured_img"
           />
         </v-col>
@@ -47,7 +52,8 @@
           </p>
           <p>
             <v-icon color="black">mdi-email</v-icon>
-            {{ listing.user.name }} ( {{ listing.user.email }} )
+            {{ listing.user.first_name + ' ' + listing.user.last_name }} (
+            {{ listing.user.email }} )
           </p>
           <p>
             <v-icon color="black">mdi-cash-multiple</v-icon>
@@ -67,6 +73,15 @@
             :to="'user-listings/' + listing._id"
             >Edit Listing</v-btn
           >
+          <v-btn
+            class="mt-3"
+            color="error"
+            outlined
+            block
+            @click="delete_listing(listing._id)"
+          >
+            Delete Listing
+          </v-btn>
           <v-chip
             label
             class="mt-4"
@@ -120,7 +135,16 @@ export default {
       return listings
     },
   },
-  methods: {},
+  methods: {
+    async delete_listing(id) {
+      let tosend = { id: id }
+      const data = await service.delete_user_listing(this.$axios, tosend)
+      if (data.msg == 1) {
+        const data = await service.users_listing(this.$axios)
+        this.all_listings = data
+      }
+    },
+  },
   async created() {
     try {
       const data = await service.users_listing(this.$axios)
@@ -143,3 +167,4 @@ img {
   border-radius: 10px;
 }
 </style>
+
