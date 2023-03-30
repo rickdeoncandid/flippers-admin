@@ -64,7 +64,7 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: 'https://api.flippers.club/',
+    baseURL: 'https://api.flippers.club/admin',
   },
   /*
    ** vuetify module configuration
