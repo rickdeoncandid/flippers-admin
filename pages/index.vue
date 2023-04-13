@@ -24,13 +24,13 @@
           <v-col cols="6" sm="6">
             <v-card class="elevation-0" outlined>
               <v-card-title>
-                <h5 class="pa-0 ma-0">Total Lisitngs</h5>
+                <h5 class="pa-0 ma-0">Total Live Lisitngs</h5>
                 <v-row align="center">
                   <v-col cols="4" class="py-0">
                     <v-icon color="indigo" size="50">mdi-web</v-icon>
                   </v-col>
                   <v-col cols="8" class="text-right py-0">
-                    <h1>{{ dashboard.total_listings }}</h1>
+                    <h1>{{ dashboard.total_live_listings }}</h1>
                   </v-col>
                 </v-row>
               </v-card-title>
@@ -228,6 +228,7 @@ export default {
   },
 }
 </script>
+
 <style scoped>
 .v-card__title {
   display: block;

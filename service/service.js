@@ -8,6 +8,9 @@ export default {
   update_password(axios, data) {
     return axios.$post(`update-password`, data)
   },
+  opt_for_newsletter(axios) {
+    return axios.$put(`opt-for-newsletter`)
+  },
   manual_verify(axios, data) {
     return axios.$post(`manuall-users`, data)
   },
@@ -71,4 +74,3 @@ export default {
     return axios.$post(`delete-user-listing`, data)
   },
 }
-
