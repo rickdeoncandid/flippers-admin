@@ -354,10 +354,10 @@ export default {
     find_average(months_duration) {
       let average_earning = 0
       let average_traffic = 0
-      let last_months = this.month_name.slice(0, months_duration)
+      const last_months = this.month_name.slice(0, months_duration)
       Object.keys(this.stats).forEach((item) => {
         last_months.forEach((month) => {
-          if (item == month) {
+          if (item === month) {
             average_earning += parseInt(this.stats[item].earnings)
             average_traffic += parseInt(this.stats[item].traffic)
           }
@@ -441,8 +441,8 @@ export default {
       this.screenshotsPayloadData = ssPayload
     },
     async move_to_draft_listing() {
-      let tosend = { listing_id: this.$route.params.id }
-      const data = await service.move_to_draft_listing(this.$axios, tosend)
+      const tosend = { listing_id: this.$route.params.id }
+      await service.move_to_draft_listing(this.$axios, tosend)
       this.$router.push('/listings')
     },
 

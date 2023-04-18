@@ -652,14 +652,11 @@ export default {
 
       this.$router.push('/user-listings')
     },
-    async update_status_user_listing(listing, type) {
+    async update_status__listing(listing, type) {
       try {
         console.log(listing)
-        let tosend = { id: listing, status: type }
-        const data = await service.update_status_user_listing(
-          this.$axios,
-          tosend
-        )
+        const tosend = { id: listing, status: type }
+        await service.update_status_user_listing(this.$axios, tosend)
         this.$router.push('/user-listings')
       } catch (err) {
         console.log(err)
@@ -668,7 +665,7 @@ export default {
   },
   computed: {
     month_name() {
-      let months = []
+      const months = []
       Object.keys(this.stats).forEach((item) => {
         months.push(item)
       })

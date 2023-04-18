@@ -179,7 +179,10 @@ export default {
         const data = await service.users_listing(this.$axios)
         this.all_listings = data
 
-        this.$toast.success('Status Updated')
+        this.$toast.success('Status Updated', {
+          position: 'top-right',
+          duration: 2000,
+        })
       } catch (err) {
         console.log(err)
       }

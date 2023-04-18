@@ -70,8 +70,8 @@ export default {
   update_status_user_listing(axios, data) {
     return axios.$post(`status-update-user-listing`, data)
   },
-  update_status_admin_listing(axios, data) {
-    return axios.$post(`status-update-admin-listing`, data)
+  toggle_admin_listing_publish_status(axios, data) {
+    return axios.$post(`toggle-admin-listing-publish-status`, data)
   },
   delete_user_listing(axios, data) {
     return axios.$post(`delete-user-listing`, data)

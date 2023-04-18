@@ -52,22 +52,24 @@
                 Delete
               </v-btn>
               <v-btn
+                v-if="listing.isPublished"
                 color="warning"
                 class="mt-3"
                 outlined
                 block
                 large
-                @click="update_admin_user_listing(listing._id, 2)"
-                ><v-icon>mdi-close</v-icon> Disapprove</v-btn
+                @click="toggle_admin_listing_publish_status(listing._id)"
+                ><v-icon>mdi-close</v-icon>Unpublish</v-btn
               >
               <v-btn
+                v-if="!listing.isPublished"
                 color="success"
                 class="mt-3"
                 outlined
                 block
                 large
-                @click="update_admin_user_listing(listing._id, 1)"
-                ><v-icon>mdi-check</v-icon>Approve</v-btn
+                @click="toggle_admin_listing_publish_status(listing._id)"
+                ><v-icon>mdi-check</v-icon>Publish</v-btn
               >
               <v-chip
                 label
@@ -136,22 +138,24 @@
                 Delete
               </v-btn>
               <v-btn
+                v-if="listing.isPublished"
                 color="warning"
                 class="mt-3"
                 outlined
                 block
                 large
-                @click="update_admin_user_listing(listing._id, 2)"
-                ><v-icon>mdi-close</v-icon> Disapprove</v-btn
+                @click="toggle_admin_listing_publish_status(listing._id)"
+                ><v-icon>mdi-close</v-icon>Unpublish</v-btn
               >
               <v-btn
+                v-if="!listing.isPublished"
                 color="success"
                 class="mt-3"
                 outlined
                 block
                 large
-                @click="update_admin_user_listing(listing._id, 1)"
-                ><v-icon>mdi-check</v-icon>Approve</v-btn
+                @click="toggle_admin_listing_publish_status(listing._id)"
+                ><v-icon>mdi-check</v-icon>Publish</v-btn
               >
               <v-chip
                 label
@@ -196,19 +200,21 @@ export default {
       const tosend = { id }
       const data = await service.delete_listing(this.$axios, tosend)
       if (data.msg === 1) {
-        const data = await service.all_listing(this.$axios)
-        this.listings = data.published
-        this.draft = data.draft
+        this.$router.go()
       }
     },
-    async update_status_user_listing(listing, type) {
+    async toggle_admin_listing_publish_status(listing, type) {
       try {
-        const tosend = { id: listing, status: type }
-        await service.update_status_admin_listing(this.$axios, tosend)
-        const data = await service.all_listing(this.$axios)
-        this.all_listings = data
+        const tosend = { id: listing }
+        await service.toggle_admin_listing_publish_status(this.$axios, tosend)
 
-        this.$toast.success('Status Updated')
+        // reload
+        this.$router.go()
+
+        this.$toast.success('Updated', {
+          position: 'top-right',
+          duration: 2000,
+        })
       } catch (err) {
         console.log(err)
       }
