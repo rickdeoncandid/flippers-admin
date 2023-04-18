@@ -14,8 +14,10 @@
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.11.0",
+    "joi": "^17.9.1",
     "js-file-download": "^0.4.12",
     "nuxt": "^2.13.0",
+    "vue-toast-notification": "^1.0.1",
     "vue-upload-multiple-image": "^1.1.4",
     "vue2-editor": "^2.10.2"
   },

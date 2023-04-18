@@ -145,7 +145,7 @@ import service from '@/service/service'
 export default {
   data() {
     return {
-      dashboard: '',
+      dashboard: {},
       new_method: '',
       feat_listing: '',
     }
@@ -153,7 +153,7 @@ export default {
   methods: {
     async add_monetize_methods() {
       try {
-        const data = await service.add_monetize_methods(this.$axios, {
+        await service.add_monetize_methods(this.$axios, {
           method: this.new_method,
         })
         this.dashboard.monetization.push(this.new_method)
@@ -164,11 +164,11 @@ export default {
     },
     async remove_methods(method) {
       try {
-        const data = await service.remove_monetize_methods(this.$axios, {
-          method: method,
+        await service.remove_monetize_methods(this.$axios, {
+          method,
         })
         this.dashboard.monetization = this.dashboard.monetization.filter(
-          (item) => item != method
+          (item) => item !== method
         )
       } catch (err) {
         console.log(err)
@@ -178,18 +178,18 @@ export default {
       try {
         if (this.feat_listing) {
           let isAlready = false
-          for (let j of this.dashboard.featured_listing) {
-            if (this.feat_listing == j._id) {
+          for (const j of this.dashboard.featured_listing) {
+            if (this.feat_listing === j._id) {
               isAlready = true
             }
           }
 
           if (!isAlready) {
-            const data = await service.add_featured_listings(this.$axios, {
+            await service.add_featured_listings(this.$axios, {
               listing: this.feat_listing,
             })
-            for (let i of this.dashboard.all_listing) {
-              if (this.feat_listing == i._id) {
+            for (const i of this.dashboard.all_listing) {
+              if (this.feat_listing === i._id) {
                 this.dashboard.featured_listing.push(i)
               }
             }
@@ -202,11 +202,11 @@ export default {
     },
     async remove_featured_listings(flisting) {
       try {
-        const data = await service.remove_featured_listings(this.$axios, {
+        await service.remove_featured_listings(this.$axios, {
           listing: flisting._id,
         })
         this.dashboard.featured_listing = this.dashboard.featured_listing.filter(
-          (item) => item != flisting
+          (item) => item !== flisting
         )
       } catch (err) {
         console.log(err)
@@ -217,6 +217,7 @@ export default {
     try {
       const data = await service.dashboard(this.$axios)
       this.dashboard = data
+      console.log({ dashboard: this.dashboard })
     } catch (err) {
       console.log(err)
     }

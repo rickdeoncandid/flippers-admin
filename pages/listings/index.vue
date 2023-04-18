@@ -20,7 +20,7 @@
             <v-col cols="12" sm="3">
               <img
                 v-if="listing.featured_img"
-                :src="'https://flippers.club/img' + listing.featured_img"
+                :src="listing.featured_img.thumbnailUrl"
                 class="elevation-4 featured_img"
               />
             </v-col>
@@ -48,7 +48,46 @@
                 outlined
                 block
                 @click="delete_product(listing._id)"
-                >Delete</v-btn
+              >
+                Delete
+              </v-btn>
+              <v-btn
+                color="warning"
+                class="mt-3"
+                outlined
+                block
+                large
+                @click="update_admin_user_listing(listing._id, 2)"
+                ><v-icon>mdi-close</v-icon> Disapprove</v-btn
+              >
+              <v-btn
+                color="success"
+                class="mt-3"
+                outlined
+                block
+                large
+                @click="update_admin_user_listing(listing._id, 1)"
+                ><v-icon>mdi-check</v-icon>Approve</v-btn
+              >
+              <v-chip
+                label
+                class="mt-4"
+                style="display: block; width: fit-content;"
+                :color="
+                  listing.isApproved != 2
+                    ? listing.isApproved
+                      ? 'success'
+                      : 'warning'
+                    : 'error'
+                "
+              >
+                {{
+                  listing.isApproved != 2
+                    ? listing.isApproved
+                      ? 'Approved'
+                      : 'Under Moderation'
+                    : 'Rejected'
+                }}</v-chip
               >
             </v-col>
           </v-row>
@@ -66,7 +105,7 @@
             <v-col cols="12" sm="3">
               <img
                 v-if="listing.featured_img"
-                :src="'https://flippers.club/img' + listing.featured_img"
+                :src="listing.featured_img.thumbnailUrl"
                 class="elevation-4"
               />
             </v-col>
@@ -93,7 +132,46 @@
                 outlined
                 block
                 @click="delete_product(listing._id)"
-                >Delete</v-btn
+              >
+                Delete
+              </v-btn>
+              <v-btn
+                color="warning"
+                class="mt-3"
+                outlined
+                block
+                large
+                @click="update_admin_user_listing(listing._id, 2)"
+                ><v-icon>mdi-close</v-icon> Disapprove</v-btn
+              >
+              <v-btn
+                color="success"
+                class="mt-3"
+                outlined
+                block
+                large
+                @click="update_admin_user_listing(listing._id, 1)"
+                ><v-icon>mdi-check</v-icon>Approve</v-btn
+              >
+              <v-chip
+                label
+                class="mt-4"
+                style="display: block; width: fit-content;"
+                :color="
+                  listing.isApproved != 2
+                    ? listing.isApproved
+                      ? 'success'
+                      : 'warning'
+                    : 'error'
+                "
+              >
+                {{
+                  listing.isApproved != 2
+                    ? listing.isApproved
+                      ? 'Approved'
+                      : 'Under Moderation'
+                    : 'Rejected'
+                }}</v-chip
               >
             </v-col>
           </v-row>
@@ -115,12 +193,24 @@ export default {
   },
   methods: {
     async delete_product(id) {
-      let tosend = { id: id }
+      const tosend = { id }
       const data = await service.delete_listing(this.$axios, tosend)
-      if (data.msg == 1) {
+      if (data.msg === 1) {
         const data = await service.all_listing(this.$axios)
         this.listings = data.published
         this.draft = data.draft
+      }
+    },
+    async update_status_user_listing(listing, type) {
+      try {
+        const tosend = { id: listing, status: type }
+        await service.update_status_admin_listing(this.$axios, tosend)
+        const data = await service.all_listing(this.$axios)
+        this.all_listings = data
+
+        this.$toast.success('Status Updated')
+      } catch (err) {
+        console.log(err)
       }
     },
   },

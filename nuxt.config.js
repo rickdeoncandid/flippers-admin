@@ -37,7 +37,10 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [{ src: '~/plugins/editor.js', ssr: false }],
+  plugins: [
+    { src: '~/plugins/editor.js', ssr: false },
+    { src: `~/plugins/toast.js`, ssr: false },
+  ],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -114,6 +117,6 @@ export default {
     },
   },
   server: {
-    port: 4001, // default: 3000
+    port: 4002, // default: 3000
   },
 }
