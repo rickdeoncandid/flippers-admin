@@ -478,9 +478,9 @@ export default {
           reader.onload = (e) => {
             const img_size_in_mb = file.size / 1024 / 1024
             const filename = file.name
-            if (img_size_in_mb > 2) {
+            if (img_size_in_mb > 3) {
               this.$toast.error(
-                `File: ${filename}, size should not be greater than 2 MB`,
+                `File: ${filename}, size should not be greater than 3 MB`,
                 {
                   position: 'top',
                 }
@@ -488,9 +488,9 @@ export default {
               this.files = []
               this.currFiles = []
               return
-            } else if (img_size_in_mb < 0.2) {
+            } else if (img_size_in_mb < 0.05) {
               this.$toast.error(
-                `File: ${filename}, size should not be less than 0.2 MB (200 KB)`,
+                `File: ${filename}, size should not be less than 0.05 MB (50 KB)`,
                 {
                   position: 'top',
                 }
