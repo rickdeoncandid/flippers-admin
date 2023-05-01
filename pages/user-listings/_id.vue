@@ -140,6 +140,7 @@
               v-model="yt_link"
               label="Youtube video url"
               outlined
+              @change="update_yt_link"
             ></v-text-field>
           </v-card-text>
           <v-card-text>
@@ -507,6 +508,17 @@ export default {
       }
       this.screenshotsPayloadData = ssPayload
     },
+    update_yt_link(e) {
+      const urlRegex = /(https:\/\/www.youtube.com\/embed?[^ ]*)/
+      const matches = e.match(urlRegex)
+
+      if (matches) {
+        this.yt_link = matches[1].slice(0, matches[1].length - 1)
+        console.log({ matches })
+      } else {
+        this.yt_link = e
+      }
+    },
 
     async update_listing() {
       const payload = {
@@ -546,10 +558,10 @@ export default {
             'number.min': 'Domain Authority must be at least 0',
             'number.max': 'Domain Authority must be at most 100',
           }),
-          articles: Joi.number().min(0).max(100).required().messages({
+          articles: Joi.number().min(0).max(10000).required().messages({
             'number.base': 'Articles is not a valid number',
             'number.min': 'Articles must be at least 0',
-            'number.max': 'Articles must be at most 100',
+            'number.max': 'Articles must be at most 10000',
           }),
           url: Joi.string().uri().required().messages({
             'string.empty': 'Product URL field is required',

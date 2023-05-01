@@ -119,6 +119,7 @@
               v-model="yt_link"
               label="Enter Youtube Video Link"
               outlined
+              @change="update_yt_link"
             ></v-text-field>
           </v-card-text>
           <v-card-text>
@@ -359,6 +360,17 @@ export default {
     },
   },
   methods: {
+    update_yt_link(e) {
+      const urlRegex = /(https:\/\/www.youtube.com\/embed?[^ ]*)/
+      const matches = e.match(urlRegex)
+
+      if (matches) {
+        this.yt_link = matches[1].slice(0, matches[1].length - 1)
+        console.log({ matches })
+      } else {
+        this.yt_link = e
+      }
+    },
     find_average(months_duration) {
       let average_earning = 0
       let average_traffic = 0
@@ -449,9 +461,9 @@ export default {
           reader.onload = (e) => {
             const img_size_in_mb = file.size / 1024 / 1024
             const filename = file.name
-            if (img_size_in_mb > 2) {
+            if (img_size_in_mb > 3) {
               this.$toast.error(
-                `File: ${filename}, size should not be greater than 2 MB`,
+                `File: ${filename}, size should not be greater than 3 MB`,
                 {
                   position: 'top',
                 }
@@ -459,9 +471,9 @@ export default {
               this.files = []
               this.currFiles = []
               return
-            } else if (img_size_in_mb < 0.1) {
+            } else if (img_size_in_mb < 0.05) {
               this.$toast.error(
-                `File: ${filename}, size should not be less than 0.1 MB (100 KB)`,
+                `File: ${filename}, size should not be less than 0.05 MB (50 KB)`,
                 {
                   position: 'top',
                 }
@@ -516,10 +528,10 @@ export default {
             'number.min': 'Domain Authority must be at least 0',
             'number.max': 'Domain Authority must be at most 100',
           }),
-          articles: Joi.number().min(0).max(100).required().messages({
+          articles: Joi.number().min(0).max(10000).required().messages({
             'number.base': 'Articles is not a valid number',
             'number.min': 'Articles must be at least 0',
-            'number.max': 'Articles must be at most 100',
+            'number.max': 'Articles must be at most 10000',
           }),
           url: Joi.string().uri().required().messages({
             'string.empty': 'Product URL field is required',
