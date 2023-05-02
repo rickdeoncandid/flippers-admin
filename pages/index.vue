@@ -30,7 +30,7 @@
                     <v-icon color="indigo" size="50">mdi-web</v-icon>
                   </v-col>
                   <v-col cols="8" class="text-right py-0">
-                    <h1>{{ dashboard.total_live_listings }}</h1>
+                    <h1>{{ dashboard.total_listings }}</h1>
                   </v-col>
                 </v-row>
               </v-card-title>
