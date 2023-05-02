@@ -70,7 +70,7 @@
             color="primary"
             outlined
             block
-            :to="'user-listings/' + listing._id"
+            :to="'/user-listings/' + listing._id"
             >Edit Listing</v-btn
           >
           <v-btn

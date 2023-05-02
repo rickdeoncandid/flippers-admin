@@ -39,7 +39,7 @@
                 color="primary"
                 outlined
                 block
-                :to="'listings/' + listing._id"
+                :to="'/listings/' + listing._id"
                 >Edit Listing</v-btn
               >
               <v-btn
@@ -125,7 +125,7 @@
                 color="primary"
                 outlined
                 block
-                :to="'listings/' + listing._id"
+                :to="'/listings/' + listing._id"
                 >Edit Listing</v-btn
               >
               <v-btn
