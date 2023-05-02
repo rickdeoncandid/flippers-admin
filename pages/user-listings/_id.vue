@@ -577,9 +577,9 @@ export default {
             'number.min': 'Site Months must be at least 0',
             'number.max': 'Site Months must be at most 12',
           }),
-          industry: Joi.string().min(5).max(20).required().messages({
+          industry: Joi.string().min(2).max(20).required().messages({
             'string.empty': 'Niche field is required',
-            'string.min': 'Niche must be at least 5 characters',
+            'string.min': 'Niche must be at least 2 characters',
             'string.max': 'Niche must be at most 20 characters',
           }),
           note: Joi.string().required().min(10).max(5000).messages({
