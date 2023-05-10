@@ -406,11 +406,17 @@ export default {
       let average_earning = 0
       let average_traffic = 0
       const last_months = this.month_name.slice(0, months_duration)
+
       Object.keys(this.stats).forEach((item) => {
         last_months.forEach((month) => {
           if (item === month) {
-            average_earning += parseInt(this.stats[item].earnings)
-            average_traffic += parseInt(this.stats[item].traffic)
+            if (parseInt(this.stats[item].earnings)) {
+              average_earning += parseInt(this.stats[item].earnings)
+            }
+
+            if (parseInt(this.stats[item].traffic)) {
+              average_traffic += parseInt(this.stats[item].traffic)
+            }
           }
         })
       })
@@ -430,10 +436,9 @@ export default {
       } else {
         avg_traffic = 0
       }
-
       return {
-        earnings: average_earning / months_duration,
-        traffic: average_traffic / months_duration,
+        earnings: avg_earning,
+        traffic: avg_traffic,
       }
     },
     uploadImage(e) {
@@ -682,7 +687,7 @@ export default {
         months.push(item)
       })
 
-      return months
+      return months.reverse()
     },
     three_months() {
       return this.find_average(3)

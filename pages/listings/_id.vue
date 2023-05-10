@@ -199,6 +199,25 @@
           </v-card-text>
         </v-card>
       </v-col>
+      <v-col cols="12" sm="4">
+        <v-card outlined>
+          <v-card-title>Last 12 Months Traffic</v-card-title>
+          <v-card-text>
+            <v-text-field
+              v-for="month in month_name"
+              :key="month"
+              v-model="stats[month].traffic"
+              :label="month"
+              dense
+              outlined
+              type="number"
+              class="mb-3"
+              :disabled="isPublished"
+            ></v-text-field>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
       <v-col>
         <v-card outlined>
           <v-card-title>Last 12 Months Earning</v-card-title>
@@ -356,17 +375,39 @@ export default {
       let average_earning = 0
       let average_traffic = 0
       const last_months = this.month_name.slice(0, months_duration)
+
       Object.keys(this.stats).forEach((item) => {
         last_months.forEach((month) => {
           if (item === month) {
-            average_earning += parseInt(this.stats[item].earnings)
-            average_traffic += parseInt(this.stats[item].traffic)
+            if (parseInt(this.stats[item].earnings)) {
+              average_earning += parseInt(this.stats[item].earnings)
+            }
+
+            if (parseInt(this.stats[item].traffic)) {
+              average_traffic += parseInt(this.stats[item].traffic)
+            }
           }
         })
       })
+
+      let avg_earning = average_earning / months_duration
+
+      if (typeof avg_earning === 'number' && !isNaN(avg_earning)) {
+        avg_earning = avg_earning.toFixed(2)
+      } else {
+        avg_earning = 0
+      }
+
+      let avg_traffic = average_traffic / months_duration
+
+      if (typeof avg_traffic === 'number' && !isNaN(avg_traffic)) {
+        avg_traffic = avg_traffic.toFixed(2)
+      } else {
+        avg_traffic = 0
+      }
       return {
-        earnings: average_earning / months_duration,
-        traffic: average_traffic / months_duration,
+        earnings: avg_earning,
+        traffic: avg_traffic,
       }
     },
     update_yt_link(e) {

@@ -379,8 +379,13 @@ export default {
       Object.keys(this.stats).forEach((item) => {
         last_months.forEach((month) => {
           if (item === month) {
-            average_earning += parseInt(this.stats[item].earnings)
-            average_traffic += parseInt(this.stats[item].traffic)
+            if (parseInt(this.stats[item].earnings)) {
+              average_earning += parseInt(this.stats[item].earnings)
+            }
+
+            if (parseInt(this.stats[item].traffic)) {
+              average_traffic += parseInt(this.stats[item].traffic)
+            }
           }
         })
       })
