@@ -521,10 +521,10 @@ export default {
 
       try {
         const schema = Joi.object({
-          name: Joi.string().min(10).max(50).required().messages({
+          name: Joi.string().min(10).max(150).required().messages({
             'string.empty': 'Title field is required',
             'string.min': 'Title must be at least 10 characters',
-            'string.max': 'Title must be at most 50 characters',
+            'string.max': 'Title must be at most 150 characters',
           }),
           content: Joi.string().min(100).max(5000).required().messages({
             'string.empty': 'Summary field is required',
