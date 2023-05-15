@@ -523,10 +523,10 @@ export default {
             'string.min': 'Title must be at least 10 characters',
             'string.max': 'Title must be at most 150 characters',
           }),
-          content: Joi.string().min(100).max(5000).required().messages({
+          content: Joi.string().min(100).max(12000).required().messages({
             'string.empty': 'Summary field is required',
             'string.min': 'Summary must be at least 100 characters',
-            'string.max': 'Summary must be at most 5000 characters',
+            'string.max': 'Summary must be at most 12000 characters',
           }),
           domain_authority: Joi.number().min(0).max(100).required().messages({
             'number.base': 'Domain Authority is not a valid number',
@@ -557,10 +557,10 @@ export default {
             'string.min': 'Niche must be at least 2 characters',
             'string.max': 'Niche must be at most 20 characters',
           }),
-          note: Joi.string().required().min(10).max(5000).messages({
+          note: Joi.string().required().min(10).max(12000).messages({
             'string.empty': "Seller's Note field is required",
             'string.min': "Seller's Note must be at least 10 characters",
-            'string.max': "Seller's Note must be at most 5000 characters",
+            'string.max': "Seller's Note must be at most 12000 characters",
           }),
           yt_link: Joi.string().uri().messages({
             'string.empty': 'YouTube Link field is required',
