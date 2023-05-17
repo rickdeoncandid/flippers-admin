@@ -565,12 +565,14 @@ export default {
             'string.min': "Seller's Note must be at least 10 characters",
             'string.max': "Seller's Note must be at most 12000 characters",
           }),
-          yt_link: Joi.string().uri().messages({
-            'string.empty': 'YouTube Link field is required',
-            'string.uri': 'YouTube Link is not a valid URL',
-            'string.regex.base':
-              'YouTube Link is not a valid YouTube Embed URL',
-          }),
+          yt_link: Joi.string()
+            .uri()
+            .messages({
+              'string.uri': 'YouTube Link is not a valid URL',
+              'string.regex.base':
+                'YouTube Link is not a valid YouTube Embed URL',
+            })
+            .optional(),,
           monetization: Joi.string().min(3).required().messages({
             'string.empty': 'Monetization field is required',
             'string.min': 'Monetization field is required',
