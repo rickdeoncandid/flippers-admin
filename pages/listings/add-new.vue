@@ -569,7 +569,7 @@ export default {
               'string.regex.base':
                 'YouTube Link is not a valid YouTube Embed URL',
             })
-            .optional(),,
+            .optional(),
           monetization: Joi.string().min(3).required().messages({
             'string.empty': 'Monetization field is required',
             'string.min': 'Monetization field is required',
