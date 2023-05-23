@@ -136,14 +136,6 @@
             </v-row>
           </v-card-text>
           <v-card-text>
-            <v-text-field
-              v-model="yt_link"
-              label="Youtube video url"
-              outlined
-              @change="update_yt_link"
-            ></v-text-field>
-          </v-card-text>
-          <v-card-text>
             <h3 class="mb-3">Monetization</h3>
             <v-select
               v-model="monetization"
@@ -365,7 +357,6 @@ export default {
   data() {
     return {
       user: { social: {} },
-      yt_link: '',
       isPublished: '',
       update_screenshots: true,
       screenshotsPayloadData: [],
@@ -513,17 +504,6 @@ export default {
       }
       this.screenshotsPayloadData = ssPayload
     },
-    update_yt_link(e) {
-      const urlRegex = /(https:\/\/www.youtube.com\/embed?[^ ]*)/
-      const matches = e.match(urlRegex)
-
-      if (matches) {
-        this.yt_link = matches[1].slice(0, matches[1].length - 1)
-        console.log({ matches })
-      } else {
-        this.yt_link = e
-      }
-    },
 
     async update_listing() {
       const payload = {
@@ -540,7 +520,6 @@ export default {
         site_month: this.site_month,
         industry: this.industry,
         note: this.note,
-        yt_link: this.yt_link,
         monetization: this.monetization,
         screenshots: [],
         listing_id: this.$route.params.id,
@@ -592,15 +571,7 @@ export default {
             'string.min': "Seller's Note must be at least 10 characters",
             'string.max': "Seller's Note must be at most 5000 characters",
           }),
-          yt_link: Joi.string()
-            .allow(...['', null])
-            .uri()
-            .optional()
-            .messages({
-              'string.uri': 'YouTube Link is not a valid URL',
-              'string.regex.base':
-                'YouTube Link is not a valid YouTube Embed URL',
-            }),
+
           monetization: Joi.string().min(3).required().messages({
             'string.empty': 'Monetization field is required',
             'string.min': 'Monetization field is required',
@@ -708,7 +679,6 @@ export default {
         this.$axios,
         this.$route.params.id
       )
-      this.yt_link = data.yt_link
       this.image = data.featured_img
       this.isPublished = data.isPublished
       this.name = data.name

@@ -114,15 +114,6 @@
           </v-card-text>
 
           <v-card-text>
-            <h3 class="mb-3">Youtube Link</h3>
-            <v-text-field
-              v-model="yt_link"
-              label="Enter Youtube Video Link"
-              outlined
-              @change="update_yt_link"
-            ></v-text-field>
-          </v-card-text>
-          <v-card-text>
             <h3 class="mb-3">Monetization</h3>
             <v-select
               v-model="monetization"
@@ -284,7 +275,6 @@ import service from '@/service/service'
 export default {
   data() {
     return {
-      yt_link: '',
       image: '',
       name: '',
       url: '',
@@ -360,17 +350,6 @@ export default {
     },
   },
   methods: {
-    update_yt_link(e) {
-      const urlRegex = /(https:\/\/www.youtube.com\/embed?[^ ]*)/
-      const matches = e.match(urlRegex)
-
-      if (matches) {
-        this.yt_link = matches[1].slice(0, matches[1].length - 1)
-        console.log({ matches })
-      } else {
-        this.yt_link = e
-      }
-    },
     find_average(months_duration) {
       let average_earning = 0
       let average_traffic = 0
@@ -512,7 +491,6 @@ export default {
         site_month: this.site_month,
         industry: this.industry,
         note: this.note,
-        yt_link: this.yt_link,
         monetization: this.monetization,
       }
 
@@ -562,15 +540,6 @@ export default {
             'string.min': "Seller's Note must be at least 10 characters",
             'string.max': "Seller's Note must be at most 12000 characters",
           }),
-          yt_link: Joi.string()
-            .allow(...['', null])
-            .uri()
-            .optional()
-            .messages({
-              'string.uri': 'YouTube Link is not a valid URL',
-              'string.regex.base':
-                'YouTube Link is not a valid YouTube Embed URL',
-            }),
           monetization: Joi.string().min(3).required().messages({
             'string.empty': 'Monetization field is required',
             'string.min': 'Monetization field is required',
